@@ -1,0 +1,167 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #0b1020;
+    color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 8%;
+    background: #11182b;
+}
+
+.navbar h2 {
+    letter-spacing: 2px;
+}
+
+.navbar span {
+    color: #8b5cf6;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+}
+
+.nav-links a:hover {
+    color: #a78bfa;
+}
+
+.hero {
+    min-height: 450px;
+    display: flex;
+    align-items: center;
+    padding: 70px 10%;
+    background: linear-gradient(120deg, #11182b, #31205b);
+}
+
+.hero-content {
+    max-width: 650px;
+}
+
+.tagline {
+    color: #a78bfa;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: 52px;
+    margin-bottom: 20px;
+}
+
+.hero-content > p {
+    line-height: 1.7;
+    color: #cbd5e1;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 14px 25px;
+    background: #8b5cf6;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.events, .about, .contact {
+    padding: 70px 8%;
+    text-align: center;
+}
+
+.events h2, .about h2, .contact h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.events > p, .about p, .contact p {
+    color: #cbd5e1;
+    line-height: 1.7;
+}
+
+.event-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.event-card {
+    background: #172036;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: left;
+}
+
+.event-card h3 {
+    color: #a78bfa;
+    margin-bottom: 15px;
+}
+
+.event-card p {
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+.event-card .date {
+    margin-top: 20px;
+}
+
+.event-card button {
+    margin-top: 20px;
+    padding: 12px 18px;
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.event-card button:hover, .btn:hover {
+    background: #6d28d9;
+}
+
+.about {
+    background: #11182b;
+}
+
+.about p {
+    max-width: 750px;
+    margin: auto;
+}
+
+footer {
+    background: #070b16;
+    padding: 25px;
+    text-align: center;
+    color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .nav-links a {
+        margin: 0 7px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .event-container {
+        grid-template-columns: 1fr;
+    }
+}
