@@ -3,7 +3,6 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
                 echo 'Downloading TechFusion source code...'
@@ -13,43 +12,59 @@ pipeline {
 
         stage('Validate') {
             steps {
-                echo 'Checking website files...'
-
-                sh 'test -s index.html'
-                sh 'test -s style.css'
-                sh 'test -s script.js'
-
-                echo 'All website files are present!'
+                echo 'Checking project files...'
+                sh '''
+                    test -s index.html
+                    test -s style.css
+                    test -s script.js
+                    test -s Dockerfile
+                    test -s k8s/deployment.yaml
+                    test -s k8s/service.yaml
+                '''
+                echo 'All required files are present!'
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Building TechFusion website...'
-
-                sh 'rm -rf dist'
-                sh 'mkdir -p dist'
-
-                sh 'cp index.html style.css script.js dist/'
-
-                echo 'Website build completed!'
+                echo 'Building TechFusion Docker image...'
+                sh '''
+                    set -eu
+                    sudo -H -u ubuntu /usr/bin/minikube image build \
+                        -t techfusion:${BUILD_NUMBER} .
+                '''
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying TechFusion to Nginx...'
+                echo 'Deploying TechFusion to Kubernetes...'
+                sh '''
+                    set -eu
 
-                sh 'rsync -av --delete --exclude=.git --exclude=Jenkinsfile dist/ /var/www/html/'
+                    sed "s|image: techfusion:latest|image: techfusion:${BUILD_NUMBER}|" \
+                        k8s/deployment.yaml > deployment-ci.yaml
 
-                echo 'Deployment successful!'
+                    sudo -H -u ubuntu /usr/local/bin/kubectl apply \
+                        -f deployment-ci.yaml
+
+                    sudo -H -u ubuntu /usr/local/bin/kubectl apply \
+                        -f k8s/service.yaml
+
+                    sudo -H -u ubuntu /usr/local/bin/kubectl rollout status \
+                        deployment/techfusion-deployment --timeout=180s
+
+                    sudo -H -u ubuntu /usr/local/bin/kubectl get pods
+
+                    sudo -H -u ubuntu /usr/local/bin/kubectl get services
+                '''
             }
         }
     }
 
     post {
         success {
-            echo 'TechFusion CI/CD Pipeline completed successfully!'
+            echo 'TechFusion successfully deployed to Kubernetes!'
         }
 
         failure {
